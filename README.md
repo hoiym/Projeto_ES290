@@ -9,4 +9,5 @@ Projeto para disciplina de Comunicações Móveis (ES290)
 
 * 1) descobrir formula real do path loss
 * 2) roda os modelos e compara com os dados fornecidos calculando o erro quadrático médio.
-* 3) Algoritmo fingerprint
+* 3) calcular o erro quadrático para cada erb separadamente.(pode existir um modelo melhor diferente para cada erb).
+* 4) Algoritmo fingerprint

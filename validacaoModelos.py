@@ -39,8 +39,21 @@ def calculate_pathloss_measures(erbs, measures):
 
 # Calcula as distancias de cada ponto para a erb dada
 def calculate_distances(erb, users_lat, users_lon):
-	distances = GeoUtils.distanceInKm(erb['lat'], erb['lon'], users_lat, users_lon)
-	print(distances)
+	return GeoUtils.distanceInKm(erb['lat'], erb['lon'], users_lat, users_lon)
+
+# Monta um dataframe com as distancias dos 
+# pontos de medicao para cada uma das erbs
+def distances_dataframe(erbs, measures):
+	users_lat = measures['lat'].values.reshape((1,measures.shape[0]))[0]
+	users_lon = measures['lon'].values.reshape((1,measures.shape[0]))[0]
+
+	distances_dict = {}
+
+	for i in range(erbs.shape[0]):
+		distances_dict[i] = calculate_distances(erbs.iloc[i], users_lat, users_lon)
+
+	return pd.DataFrame(data = distances_dict)
+
 
 
 # Calcula o pathloss utilizando o modelo passado
@@ -50,9 +63,9 @@ def calculate_pathloss_models(distances, model):
 
 def main():
 	erbs, measures = read_input()
-	calculate_pathloss_measures(erbs, measures)
-	calculate_distances(erbs.iloc[0], measures['lat'].values.reshape((1,measures.shape[0]))[0], measures['lon'].values.reshape((1,measures.shape[0]))[0])
-
+	pathloss_df = calculate_pathloss_measures(erbs, measures)
+	print(distances_dataframe(erbs, measures))
+	
 
 if __name__ == '__main__':
 	main()

@@ -61,10 +61,13 @@ def distances_dataframe(erbs, measures):
 def calculate_pathloss_model(distances, model):
     return model.pathloss(distances)
 
-# Calcula o erro quadratico medio por erb
-# do modelo em relacao ao valor medido
-def calculate_errors(pathloss_medido_df, pathloss_modelo_df):
-    pass
+# Calcula a raiz do erro quadrático médio por
+# erb do modelo em relação ao valor medido
+def calculate_errors(pathloss_measures_df, pathloss_model_df):
+    squaredError = ((pathloss_measures_df - pathloss_model_df) ** 2)
+    rmse = squaredError.mean(axis=0) ** (0.5)
+
+    return rmse
 
 # Cria um dict com os modelos de pathloss
 def get_models():
@@ -92,7 +95,10 @@ def main():
         pathloss_model_df = calculate_pathloss_model(distances_df, model)
         errors_dict[name] = calculate_errors(pathloss_measures_df, pathloss_model_df)
 
-    erros_df = pd.DataFrame(data = errors_dict)
+    indexes = erbs['nr'].values.reshape((1,6))[0]
+    errors_df = pd.DataFrame(data = errors_dict, index = indexes)
+
+    print(errors_df)
     
 
 

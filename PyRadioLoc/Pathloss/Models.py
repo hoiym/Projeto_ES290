@@ -45,11 +45,11 @@ class LeeModel(object):
 
 class EricssonModel(object):
     """Ericcson Model"""
-    def __init__(self, freq):
+    def __init__(self, freq, checkFreq=True):
         self.freq = freq
         self.cityKind = CityKind.Medium
         self.areaKind = AreaKind.Urban
-        self.checkFreq = True
+        self.checkFreq = checkFreq
         self.txH = 50.0
         self.rxH = 1.5
     def pathloss(self,dist):
@@ -70,7 +70,7 @@ class EricssonModel(object):
         return PL
 class Cost231Model(object):
     """COST 231- Cost-Waldrosch-Ikegami Model"""
-    def __init__(self, freq):
+    def __init__(self, freq, checkFreq=True):
         self.freq = freq
         self.txH = 50.0
         self.rxH = 1.5
@@ -79,7 +79,7 @@ class Cost231Model(object):
         self.hr =3.0
         self.areaKind = AreaKind.Urban
         self.cityKind =  CityKind.Medium
-        self.checkFreq = True
+        self.checkFreq = checkFreq
     def pathloss(self,dist):
         if (self.checkFreq):
             if (self.freq<=150 or self.freq>=2000):
@@ -113,12 +113,12 @@ class Cost231Model(object):
 
 class Cost231HataModel(object):
     """COST 231-Cost-Hata Extension Model"""
-    def __init__(self, freq):
+    def __init__(self, freq, checkFreq = True):
        self.freq = freq
        self.rxH =1.5
        self.txH = 50.0
        self.areaKind = AreaKind.Urban
-       self.checkFreq = True
+       self.checkFreq = checkFreq
     def pathloss(self,dist):
         if (self.checkFreq):
             if (self.freq<=150 or self.freq>=2000):
@@ -130,13 +130,13 @@ class Cost231HataModel(object):
         return L
 class OkumuraHataModel(object):
     """Okumura-Hata Model"""
-    def __init__(self, freq):
+    def __init__(self, freq, checkFreq=True):
        self.freq = freq
        self.rxH =1.5
        self.txH = 50.0
        self.areaKind = AreaKind.Urban
        self.cityKind = CityKind.Large
-       self.checkFreq = True
+       self.checkFreq = checkFreq
 
     def pathloss(self,dist):
         if (self.checkFreq):
@@ -162,13 +162,13 @@ class OkumuraHataModel(object):
             return lossUrban
 
 class Ecc33Model(object):
-    def __init__(self, freq):
+    def __init__(self, freq, checkFreq=True):
        self.freq = freq
        self.rxH =1.5
        self.txH = 50.0
        self.areaKind = AreaKind.Urban
        self.cityKind = CityKind.Large
-       self.checkFreq = True
+       self.checkFreq = checkFreq
 
     def pathloss(self,dist):
         if (self.checkFreq):
@@ -183,12 +183,12 @@ class Ecc33Model(object):
         return PL
 
 class SuiModel(object):
-    def __init__(self, freq):
+    def __init__(self, freq, checkFreq=True):
        self.freq = freq
        self.rxH =1.5
        self.txH = 50.0
        self.terrainKind = TerrainKind.A
-       self.checkFreq = True
+       self.checkFreq = checkFreq
        self.shadowFading = 8.2
 
     def pathloss(self,dist):

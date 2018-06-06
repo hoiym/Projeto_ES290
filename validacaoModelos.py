@@ -13,8 +13,19 @@ from PyRadioLoc.Pathloss.Models import OkumuraHataModel
 from PyRadioLoc.Pathloss.Models import Ecc33Model
 from PyRadioLoc.Pathloss.Models import SuiModel
 
-
+# Cria um dict com os modelos de pathloss
 FREQ_ERBS = 1800
+MODELS_DICT = {
+        'FreeSpace' : FreeSpaceModel(FREQ_ERBS),
+        'FlatEarth' : FlatEarthModel(FREQ_ERBS),
+        'LeeModel' : LeeModel(FREQ_ERBS),
+        'EricssonModel' : EricssonModel(FREQ_ERBS, False),
+        'Cost231Model' : Cost231Model(FREQ_ERBS, False),
+        'Cost231HataModel' : Cost231HataModel(FREQ_ERBS, False),
+        'OkumuraHataModel' : OkumuraHataModel(FREQ_ERBS, False),
+        'Ecc33Model' : Ecc33Model(FREQ_ERBS, False),
+        'SuiModel' : SuiModel(FREQ_ERBS, False)
+    }   
 
 # Le os arquivos de dados
 def read_input():
@@ -69,29 +80,15 @@ def calculate_errors(pathloss_measures_df, pathloss_model_df):
 
     return rmse
 
-# Cria um dict com os modelos de pathloss
-def get_models():
-    return {
-        'FreeSpace' : FreeSpaceModel(FREQ_ERBS),
-        'FlatEarth' : FlatEarthModel(FREQ_ERBS),
-        'LeeModel' : LeeModel(FREQ_ERBS),
-        'EricssonModel' : EricssonModel(FREQ_ERBS, False),
-        'Cost231Model' : Cost231Model(FREQ_ERBS, False),
-        'Cost231HataModel' : Cost231HataModel(FREQ_ERBS, False),
-        'OkumuraHataModel' : OkumuraHataModel(FREQ_ERBS, False),
-        'Ecc33Model' : Ecc33Model(FREQ_ERBS, False),
-        'SuiModel' : SuiModel(FREQ_ERBS, False)
-    }
 
 def main():
     erbs, measures = read_input()
     pathloss_measures_df = calculate_pathloss_measures(erbs, measures)
     distances_df = distances_dataframe(erbs, measures)
-    models = get_models()
     
     errors_dict = dict()
     
-    for name, model in models.items():
+    for name, model in MODELS_DICT.items():
         pathloss_model_df = calculate_pathloss_model(distances_df, model)
         errors_dict[name] = calculate_errors(pathloss_measures_df, pathloss_model_df)
 

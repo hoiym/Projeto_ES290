@@ -28,7 +28,7 @@ def knn_grid(cells, measures):
 												   pred_labels[0, 4], pred_labels[0, 5]))
 
 def main():
-	cells = pd.read_csv('grids/grid5.csv')
+	cells = pd.read_csv('grids/grid20.csv')
 	measures = pd.read_csv('dados/medicoes.csv')
 	
 	print("lat,lon,RSSI_1,RSSI_2,RSSI_3,RSSI_4,RSSI_5,RSSI_6")

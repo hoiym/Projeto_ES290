@@ -14,6 +14,8 @@ from PyRadioLoc.Pathloss.Models import OkumuraHataModel
 from PyRadioLoc.Pathloss.Models import Ecc33Model
 from PyRadioLoc.Pathloss.Models import SuiModel
 
+EIRP = 55.59
+
 # Cria um dict com os modelos de pathloss por erb
 def get_models():
     return {
@@ -26,20 +28,27 @@ def get_models():
     }
 
 def main():
-	cells = pd.read_csv('grids/grid20.csv')
-	erbs = pd.read_csv('dados/erbs.csv')
+    cells = pd.read_csv('grids/grid20.csv')
+    erbs = pd.read_csv('dados/erbs.csv')
 
-	distances_df = vm.distances_dataframe(erbs, cells)
-	models = get_models()
+    distances_df = vm.distances_dataframe(erbs, cells)
+    models = get_models()
 
-	pathloss_dict = dict()
+    pathloss_dict = dict()
 
-	for erb_name, model in models.items():
- 		pathloss_dict[erb_name] = vm.calculate_pathloss_model(distances_df[erb_name].values, model)
- 		
-	pathloss_df = pd.DataFrame(data = pathloss_dict)
+    for erb_name, model in models.items():
+        pathloss_dict[erb_name] = vm.calculate_pathloss_model(distances_df[erb_name].values, model)
 
-	print(pathloss_df)
+    pathloss_df = pd.DataFrame(data = pathloss_dict)
+    pathloss_df = EIRP - pathloss_df
+
+    print("lat,lon,RSSI_1,RSSI_2,RSSI_3,RSSI_4,RSSI_5,RSSI_6")
+
+    for i in range(len(cells)):
+        print('{},{},{},{},{},{},{},{}'.format(cells.iloc[i, 0], cells.iloc[i, 1],
+                                               pathloss_df.iloc[i, 0], pathloss_df.iloc[i, 1],
+                                               pathloss_df.iloc[i, 2], pathloss_df.iloc[i, 3],
+                                               pathloss_df.iloc[i, 4], pathloss_df.iloc[i, 5]))
 
 
 if __name__ == '__main__':

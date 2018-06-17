@@ -3,6 +3,7 @@ import numpy as np
 import math
 
 from sklearn import svm
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.multioutput import MultiOutputRegressor
 
 # >>> Commands for avss' machine
@@ -61,6 +62,17 @@ def find_best_params(train_data, train_labels, test_data, test_labels):
 	print('Best C', c_values[c_idx])
 	print('Best EPS', eps_values[eps_idx])
 
+def rmse_coord(pred_labels, test_labels, coord):
+	label_len = len(pred_labels)
+	rmse = 0.0
+	
+	for i in range(label_len):
+		rmse = rmse + (pred_labels[i][coord] - test_labels.iloc[i, coord])**2
+		
+	rmse = math.sqrt(rmse/label_len)
+	
+	return rmse
+
 def main():
 	medicoes, grid_teorico, grid_ml, test = read_files()
 
@@ -77,9 +89,24 @@ def main():
 	# find_best_params(train_data, train_labels, test_data, test_labels)
 
 	svm_reg = svm.SVR(C=0.05, epsilon=0.000001)
-	pred_labels = MultiOutputRegressor(svm_reg).fit(train_data, train_labels).predict(test_data)
-
-	print(pred_labels)
+	svm_pred_labels = MultiOutputRegressor(svm_reg).fit(train_data, train_labels).predict(test_data)
+	lat_rmse = rmse_coord(svm_pred_labels, test_labels, 0)
+	lng_rmse = rmse_coord(svm_pred_labels, test_labels, 1)
+	
+	print('RMSE SVM:')
+	print('>> Lat:', lat_rmse)
+	print('>> Lng:', lng_rmse)
+	print('>> Sum:', lat_rmse + lng_rmse)
+	
+	knn_reg = KNeighborsRegressor(n_neighbors=5, weights='distance')
+	knn_pred_labels = MultiOutputRegressor(knn_reg).fit(train_data, train_labels).predict(test_data)
+	lat_rmse = rmse_coord(knn_pred_labels, test_labels, 0)
+	lng_rmse = rmse_coord(knn_pred_labels, test_labels, 1)
+	
+	print('RMSE KNN:')
+	print('>> Lat:', lat_rmse)
+	print('>> Lng:', lng_rmse)
+	print('>> Sum:', lat_rmse + lng_rmse)
 
 if __name__ == '__main__':
     main()

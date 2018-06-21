@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import math
 
+from PyRadioLoc.Utils.GeoUtils import GeoUtils
 from sklearn import svm
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.multioutput import MultiOutputRegressor
@@ -73,12 +74,30 @@ def rmse_coord(pred_labels, test_labels, coord):
 	
 	return rmse
 
+def mean_dist(pred_labels, test_labels):
+	label_len = len(pred_labels)
+	mean = 0.0
+	
+	for i in range(label_len):
+		mean += GeoUtils.distanceInKm(pred_labels[i][0], pred_labels[i][1], test_labels.iloc[i, 0], test_labels.iloc[i, 1])
+			
+	return float(mean) / label_len 
+
 def main():
 	medicoes, grid_teorico, grid_ml, test = read_files()
 
 	# Mudar essa variável para testar diferentes dados de entrada
+
+	# Apenas uma base de dados
 	data = medicoes
-	
+
+	# Concatenação de bases de dados
+	# data = pd.concat([medicoes, grid_ml])
+	# data.reset_index(drop=True, inplace=True)
+
+	# Média de bases de dados
+	# data = (grid_teorico + grid_ml) / 2.0
+
 	# Dividing data from labels to be predicted
 	train_labels = data.iloc[:, 0:2]
 	train_data = data.iloc[:, 2:]
@@ -90,23 +109,31 @@ def main():
 
 	svm_reg = svm.SVR(C=0.05, epsilon=0.000001)
 	svm_pred_labels = MultiOutputRegressor(svm_reg).fit(train_data, train_labels).predict(test_data)
-	lat_rmse = rmse_coord(svm_pred_labels, test_labels, 0)
-	lng_rmse = rmse_coord(svm_pred_labels, test_labels, 1)
 	
-	print('RMSE SVM:')
-	print('>> Lat:', lat_rmse)
-	print('>> Lng:', lng_rmse)
-	print('>> Sum:', lat_rmse + lng_rmse)
+	mean = mean_dist(svm_pred_labels, test_labels)
+	print('MEAN DIST SVM: ', mean)
+
+	# lat_rmse = rmse_coord(svm_pred_labels, test_labels, 0)
+	# lng_rmse = rmse_coord(svm_pred_labels, test_labels, 1)
+	
+	# print('RMSE SVM:')
+	# print('>> Lat:', lat_rmse)
+	# print('>> Lng:', lng_rmse)
+	# print('>> Sum:', lat_rmse + lng_rmse)
 	
 	knn_reg = KNeighborsRegressor(n_neighbors=5, weights='distance')
 	knn_pred_labels = MultiOutputRegressor(knn_reg).fit(train_data, train_labels).predict(test_data)
-	lat_rmse = rmse_coord(knn_pred_labels, test_labels, 0)
-	lng_rmse = rmse_coord(knn_pred_labels, test_labels, 1)
 	
-	print('RMSE KNN:')
-	print('>> Lat:', lat_rmse)
-	print('>> Lng:', lng_rmse)
-	print('>> Sum:', lat_rmse + lng_rmse)
+	mean = mean_dist(knn_pred_labels, test_labels)
+	print('MEAN DIST KNN: ', mean)
+
+	# lat_rmse = rmse_coord(knn_pred_labels, test_labels, 0)
+	# lng_rmse = rmse_coord(knn_pred_labels, test_labels, 1)
+	
+	# print('RMSE KNN:')
+	# print('>> Lat:', lat_rmse)
+	# print('>> Lng:', lng_rmse)
+	# print('>> Sum:', lat_rmse + lng_rmse)
 
 if __name__ == '__main__':
     main()

@@ -6,6 +6,7 @@ from PyRadioLoc.Utils.GeoUtils import GeoUtils
 from sklearn import svm
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.multioutput import MultiOutputRegressor
+from sklearn.ensemble import RandomForestRegressor
 
 # >>> Commands for avss' machine
 # sudo apt-get install python3-pip
@@ -92,7 +93,7 @@ def main():
 	data = medicoes
 
 	# Concatenação de bases de dados
-	# data = pd.concat([medicoes, grid_ml])
+	# data = pd.concat([medicoes, grid_teorico])
 	# data.reset_index(drop=True, inplace=True)
 
 	# Média de bases de dados
@@ -107,11 +108,11 @@ def main():
 	
 	# find_best_params(train_data, train_labels, test_data, test_labels)
 
-	svm_reg = svm.SVR(C=0.05, epsilon=0.000001)
-	svm_pred_labels = MultiOutputRegressor(svm_reg).fit(train_data, train_labels).predict(test_data)
+	# svm_reg = svm.SVR(C=0.05, epsilon=0.000001)
+	# svm_pred_labels = MultiOutputRegressor(svm_reg).fit(train_data, train_labels).predict(test_data)
 	
-	mean = mean_dist(svm_pred_labels, test_labels)
-	print('MEAN DIST SVM: ', mean)
+	# mean = mean_dist(svm_pred_labels, test_labels)
+	# print('MEAN DIST SVM: ', mean)
 
 	# lat_rmse = rmse_coord(svm_pred_labels, test_labels, 0)
 	# lng_rmse = rmse_coord(svm_pred_labels, test_labels, 1)
@@ -121,11 +122,17 @@ def main():
 	# print('>> Lng:', lng_rmse)
 	# print('>> Sum:', lat_rmse + lng_rmse)
 	
-	knn_reg = KNeighborsRegressor(n_neighbors=5, weights='distance')
-	knn_pred_labels = MultiOutputRegressor(knn_reg).fit(train_data, train_labels).predict(test_data)
+	# knn_reg = KNeighborsRegressor(n_neighbors=5, weights='distance')
+	# knn_pred_labels = MultiOutputRegressor(knn_reg).fit(train_data, train_labels).predict(test_data)
 	
-	mean = mean_dist(knn_pred_labels, test_labels)
-	print('MEAN DIST KNN: ', mean)
+	# mean = mean_dist(knn_pred_labels, test_labels)
+	# print('MEAN DIST KNN: ', mean)
+
+	rf_reg = RandomForestRegressor(max_depth=3, random_state=0)
+	rf_pred_labels = MultiOutputRegressor(rf_reg).fit(train_data, train_labels).predict(test_data)
+
+	mean = mean_dist(rf_pred_labels, test_labels)
+	print('MEAN DIST RF: ', mean)
 
 	# lat_rmse = rmse_coord(knn_pred_labels, test_labels, 0)
 	# lng_rmse = rmse_coord(knn_pred_labels, test_labels, 1)

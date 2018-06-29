@@ -15,12 +15,16 @@ Projeto para disciplina de Comunicações Móveis (ES290)
 * No conjunto de dados de treinamento, percebe-se que há 345 instâncias com valores da latitude maiores do que o limite superior de -8.065 especificado e há 94  instâncias com valores da longitude maiores do que o limite superior de -34.887.
 
 * Dos dados de treinamento, nota-se os seguintes limites:
-** a) Longitude de -34.905396 a -34.885067  
-** b) Latitude de -8.077546 a -8.060549
+
+1) Longitude de -34.905396 a -34.885067  
+
+2) Latitude de -8.077546 a -8.060549
 
 * Novos limites adotados:
-** a) Longitude de -34.91 a -34.885 
-** b) Latitude de -8.080 a -8.060
+
+1) Longitude de -34.91 a -34.885 
+
+2) Latitude de -8.080 a -8.060
 
 
 ## Metodologia
@@ -46,13 +50,13 @@ Na tabela observamos que o modelo de Okumura-Hata teve melhor desempenho para to
 Considerando as resoluções informadas na especificações do projeto, para a geração das coordenadas no grid, o seguinte procedimento foi adotado.
 
 
-* 1) Conversão da altura (delta\_lat) e largura (delta\_long) do retângulo de coordenadas geográficas para cartesianas.
+1) Conversão da altura (delta\_lat) e largura (delta\_long) do retângulo de coordenadas geográficas para cartesianas.
 
-* 2) Divisão da distância obtida em Km para o delta\_lat pela resolução do grid obtendo div\_lat e divisão da distância obtida em Km para o delta\_long pela resolução do grid obtendo div\_long.
+2) Divisão da distância obtida em Km para o delta\_lat pela resolução do grid obtendo div\_lat e divisão da distância obtida em Km para o delta\_long pela resolução do grid obtendo div\_long.
 
-* 3) Divisão do delta\_lat pelo div\_lat obtendo a largura (inc\_lat) da célula unitária do grid e divisão do delta\_long pelo div\_long obtendo a altura (inc\_long) da célula do grid.
+3) Divisão do delta\_lat pelo div\_lat obtendo a largura (inc\_lat) da célula unitária do grid e divisão do delta\_long pelo div\_long obtendo a altura (inc\_long) da célula do grid.
 
-* 4) Interpolação da região de cobertura utilizando incrementos de tamanho inc\_lat e inc\_long nos eixos vertical e horizontal, respectivamente.
+4) Interpolação da região de cobertura utilizando incrementos de tamanho inc\_lat e inc\_long nos eixos vertical e horizontal, respectivamente.
 
 ### Treino do grid teórico
 

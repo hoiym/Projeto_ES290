@@ -15,12 +15,12 @@ Projeto para disciplina de Comunicações Móveis (ES290)
 * No conjunto de dados de treinamento, percebe-se que há 345 instâncias com valores da latitude maiores do que o limite superior de -8.065 especificado e há 94  instâncias com valores da longitude maiores do que o limite superior de -34.887.
 
 * Dos dados de treinamento, nota-se os seguintes limites:
-a) Longitude -34.905396 a -34.885067  
-b) Latitude de -8.077546 a -8.060549
+** a) Longitude de -34.905396 a -34.885067  
+** b) Latitude de -8.077546 a -8.060549
 
 * Novos limites adotados:
-a) Longitude -34.91 a -34.885 
-b) Latitude de -8.080 a -8.060
+** a) Longitude de -34.91 a -34.885 
+** b) Latitude de -8.080 a -8.060
 
 
 ## Metodologia
@@ -38,7 +38,7 @@ Primeiramente utilizamos os modelos teóricos da biblioteca pyRadioloc para calc
 | BTS5  |       15.154986  |   79.370620 |  25.178888 |     26.031283  | 45.624992 | 28.461849 | 18.711919    |     12.336439 | 13.204896 |
 | BTS6  |       12.560865  |   75.198362 |  21.643488  |    20.856594 | 49.525607 | 32.287251 |  21.857261   |      10.965627 | 11.462824 |
 
-Na tabela observamos que o modelo de Okumura-Hata teve melhor desempenho para todas as erbs, exceto a BTS3, na qual o modelo de Lee foi melhor. Estes modelos foram utilizados para o treinamento teórico do grid.
+Na tabela observamos que o modelo de Okumura-Hata teve melhor desempenho para todas as ERBs, exceto a BTS3, na qual o modelo de Lee foi melhor. Estes modelos foram utilizados para o treinamento teórico do grid.
 
 
 ### Geração das coordenadas dos grids
@@ -48,7 +48,7 @@ Considerando as resoluções informadas na especificações do projeto, para a g
 
 * 1) Conversão da altura (delta\_lat) e largura (delta\_long) do retângulo de coordenadas geográficas para cartesianas.
 
-* 2) Divisão da distância obtida em Km para o delta\_lat pela resolução do grid obtendo div\_lat, divisão da distância obtida em Km para o delta\_long pela resolução do grid obtendo div\_long.
+* 2) Divisão da distância obtida em Km para o delta\_lat pela resolução do grid obtendo div\_lat e divisão da distância obtida em Km para o delta\_long pela resolução do grid obtendo div\_long.
 
 * 3) Divisão do delta\_lat pelo div\_lat obtendo a largura (inc\_lat) da célula unitária do grid e divisão do delta\_long pelo div\_long obtendo a altura (inc\_long) da célula do grid.
 
@@ -97,11 +97,9 @@ Resolução 10mx10m:
 
 | Regressor | 1 | 2 | 3 | 4 | 5 | 6 |
 |---|---|---|---|---|---|---|
-| KNN | 0.14446414541730232 | 0.8520094589808948 | 0.2029580155629249 | 0.18435662299910396 | 0.19455949984335072 | 0.23941097039171727 |
-| SVM | 0.7564987793599119 | 0.7795778147854601 | ---  | 0.7528739709681902 | --- | 0.778294269794386 | 
-| RF | --- | --- | --- | --- | --- | --- |
-
-
+| KNN | 144.5 | 852.0 | 203.0 | 184.4 | 194.6 | 239.4 |
+| SVM | 756.5 | 779.6 | ---  | 752.9 | --- | 778.3 | 
+| RF | 463.4 | 831.1 | 539.2 | 761.2 | 531.4 | 701.1 |
 
 Resolução 20mx20m:
 
@@ -110,10 +108,3 @@ Resolução 20mx20m:
 | KNN | 0.14446414541730232 | 0.8515506931041525 | 0.2233488453106654 | 0.1843372144382984 | 0.2027873970277777 | 0.24303338164279928 |
 | SVM | 0.7564987793599119 | 0.7800183686718692 | 0.7273876974758953 | 0.7529093556387751 | 0.7142446465294074 | 0.7738708170783751 |
 | RF | --- | --- | --- | --- | --- | --- |
-
-
-
-
-
-
-

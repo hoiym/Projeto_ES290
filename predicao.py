@@ -15,8 +15,8 @@ from sklearn.ensemble import RandomForestRegressor
 def read_files():
 	medicoes = pd.read_csv('dados/medicoes.csv')
 	# Mudar os arquivos de entrada para testar diferentes resoluções
-	grid_teorico = pd.read_csv('dados/grid_teorico_20.csv')
-	grid_ml = pd.read_csv('dados/grid_ml_20.csv')
+	grid_teorico = pd.read_csv('dados/grid_teorico_05.csv')
+	grid_ml = pd.read_csv('dados/grid_ml_05.csv')
 	test = pd.read_csv('dados/testLoc.csv')
 	
 	return medicoes, grid_teorico, grid_ml, test
@@ -108,8 +108,8 @@ def main():
 	
 	# find_best_params(train_data, train_labels, test_data, test_labels)
 
-	# svm_reg = svm.SVR(C=0.05, epsilon=0.000001)
-	# svm_pred_labels = MultiOutputRegressor(svm_reg).fit(train_data, train_labels).predict(test_data)
+	svm_reg = svm.SVR(C=0.05, epsilon=0.000001)
+	svm_pred_labels = MultiOutputRegressor(svm_reg).fit(train_data, train_labels).predict(test_data)
 	
 	# mean = mean_dist(svm_pred_labels, test_labels)
 	# print('MEAN DIST SVM: ', mean)
@@ -122,17 +122,11 @@ def main():
 	# print('>> Lng:', lng_rmse)
 	# print('>> Sum:', lat_rmse + lng_rmse)
 	
-	# knn_reg = KNeighborsRegressor(n_neighbors=5, weights='distance')
-	# knn_pred_labels = MultiOutputRegressor(knn_reg).fit(train_data, train_labels).predict(test_data)
+	knn_reg = KNeighborsRegressor(n_neighbors=5, weights='distance')
+	knn_pred_labels = MultiOutputRegressor(knn_reg).fit(train_data, train_labels).predict(test_data)
 	
 	# mean = mean_dist(knn_pred_labels, test_labels)
 	# print('MEAN DIST KNN: ', mean)
-
-	rf_reg = RandomForestRegressor(max_depth=3, random_state=0)
-	rf_pred_labels = MultiOutputRegressor(rf_reg).fit(train_data, train_labels).predict(test_data)
-
-	mean = mean_dist(rf_pred_labels, test_labels)
-	print('MEAN DIST RF: ', mean)
 
 	# lat_rmse = rmse_coord(knn_pred_labels, test_labels, 0)
 	# lng_rmse = rmse_coord(knn_pred_labels, test_labels, 1)
@@ -141,6 +135,28 @@ def main():
 	# print('>> Lat:', lat_rmse)
 	# print('>> Lng:', lng_rmse)
 	# print('>> Sum:', lat_rmse + lng_rmse)
+	
+	rf_reg = RandomForestRegressor(max_depth=3, random_state=0)
+	rf_pred_labels = MultiOutputRegressor(rf_reg).fit(train_data, train_labels).predict(test_data)
+
+	# mean = mean_dist(rf_pred_labels, test_labels)
+	# print('MEAN DIST RF: ', mean)
+	
+	pred_labels = (svm_pred_labels + knn_pred_labels) / 2.0
+	mean = mean_dist(pred_labels, test_labels)
+	print('MEAN DIST (KNN + SVM): ', mean)
+	
+	pred_labels = (knn_pred_labels + rf_pred_labels) / 2.0
+	mean = mean_dist(pred_labels, test_labels)
+	print('MEAN DIST (KNN + RF): ', mean)
+	
+	pred_labels = (svm_pred_labels + rf_pred_labels) / 2.0
+	mean = mean_dist(pred_labels, test_labels)
+	print('MEAN DIST (SVM + RF): ', mean)
+	
+	pred_labels = (svm_pred_labels + knn_pred_labels + rf_pred_labels) / 3.0
+	mean = mean_dist(pred_labels, test_labels)
+	print('MEAN DIST (KNN + SVM + RF): ', mean)
 
 if __name__ == '__main__':
     main()
